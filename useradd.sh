@@ -1,4 +1,7 @@
 #!/bin/bash
+msg(){
+  echo -e "\033[1;36m   [info] $1\033[0m"
+}
 
 #TODO: loop + ask for sudoer + read login instead of parameter !
 
