@@ -35,15 +35,19 @@ mysql -u root -p"${mysql_root_password}" 'roundcube' < /var/www/roundcubemail/SQ
 
 cp /var/www/roundcubemail/config/main.inc.php.dist /var/www/roundcubemail/config/main.inc.php
 
-sed -i "s|^\(\$rcmail_config\['default_host'\] =\).*$|\1 \'localhost\';|" /var/www/roundcubemail/config/main.inc.php
-sed -i "s|^\(\$rcmail_config\['smtp_server'\] =\).*$|\1 \'localhost\';|" /var/www/roundcubemail/config/main.inc.php
+sed -i "s|^\(\$rcmail_config\['default_host'\] =\).*$|\1 \'ssl:\/\/localhost\';|" /var/www/roundcubemail/config/main.inc.php
+sed -i "s|^\(\$rcmail_config\['default_port'\] =\).*$|\1 993;|" /var/www/roundcubemail/config/main.inc.php
+sed -i "s|^\(\$rcmail_config\['smtp_server'\] =\).*$|\1 \'tls:\/\/localhost\';|" /var/www/roundcubemail/config/main.inc.php
 sed -i "s|^\(\$rcmail_config\['smtp_user'\] =\).*$|\1 \'%u\';|" /var/www/roundcubemail/config/main.inc.php
 sed -i "s|^\(\$rcmail_config\['smtp_pass'\] =\).*$|\1 \'%p\';|" /var/www/roundcubemail/config/main.inc.php
 sed -i "s|^\(\$rcmail_config\['support_url'\] =\).*$|\1 \'https://duckduckgo.com\';|" /var/www/roundcubemail/config/main.inc.php
+sed -i "s|^\(\$rcmail_config\['password_charset'\] =\).*$|\1 \'utf8';|" /var/www/roundcubemail/config/main.inc.php
 sed -i "s|^\(\$rcmail_config\['quota_zero_as_unlimited'\] =\).*$|\1 true;|" /var/www/roundcubemail/config/main.inc.php
 sed -i "s|^\(\$rcmail_config\['preview_pane'\] =\).*$|\1 true;|" /var/www/roundcubemail/config/main.inc.php
 sed -i "s|^\(\$rcmail_config\['read_when_deleted'\] =\).*$|\1 false;|" /var/www/roundcubemail/config/main.inc.php
 sed -i "s|^\(\$rcmail_config\['check_all_folders'\] =\).*$|\1 true;|" /var/www/roundcubemail/config/main.inc.php
+sed -i "s|^\(\$rcmail_config\['draft_autosave'\] =\).*$|\1 30;|" /var/www/roundcubemail/config/main.inc.php
+sed -i "s|^\(\$rcmail_config\['use_https'\] =\).*$|\1 true;|" /var/www/roundcubemail/config/main.inc.php
 sed -i "s|^\(\$rcmail_config\['display_next'\] =\).*$|\1 true;|" /var/www/roundcubemail/config/main.inc.php
 sed -i "s|^\(\$rcmail_config\['top_posting'\] =\).*$|\1 true;|" /var/www/roundcubemail/config/main.inc.php
 sed -i "s|^\(\$rcmail_config\['sig_above'\] =\).*$|\1 true;|" /var/www/roundcubemail/config/main.inc.php
