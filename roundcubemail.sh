@@ -1,15 +1,18 @@
 #!/bin/sh
+msg(){
+  echo -e "\033[1;36m   [info] $1\033[0m"
+}
 
 clear
 
-wget http://downloads.sourceforge.net/project/roundcubemail/roundcubemail/0.9.5/roundcubemail-0.9.5.tar.gz
-mv roundcubemail-*.tar.gz /var/www/
-tar xfz /var/www/roundcubemail-*.tar.gz
-rm -f /var/www/roundcubemail-*.tar.gz
-mv /var/www/roundcubemail-* /var/www/roundcubemail
-chown -R root:root /var/www/roundcubemail
-chown -R www-data:root /var/www/roundcubemail/temp/
-chown -R www-data:root /var/www/roundcubemail/logs/
+wget http://sourceforge.net/projects/roundcubemail/files/roundcubemail/0.9.5/roundcubemail-0.9.5.tar.gz/download#
+tar xfz download && msg 'untar-ing'
+rm -f download && msg 'rm downloaded file'
+mv ./roundcubemail-* /var/www/roundcubemail && msg 'moving to /var/www'
+chown -R root:root /var/www/roundcubemail && msg 'chown tp root:root'
+chown -R www-data:root /var/www/roundcubemail/temp/ && msg 'chown to www-data:www-data'
+chown -R www-data:root /var/www/roundcubemail/logs/ && msg 'chown to www-data:www-data'
+
 
 if [ -z "${mysql_roundcube_password}" ]; then
   tmp=$(</dev/urandom tr -dc A-Za-z0-9 | head -c12)
