@@ -31,28 +31,28 @@ GRANT ALL PRIVILEGES ON `roundcube` . * TO 'roundcube'@'localhost';
 FLUSH PRIVILEGES;
 EOF
 
-mysql -u root -p"${mysql_root_password}" 'roundcube' < /var/www/roundcube/SQL/mysql.initial.sql
+mysql -u root -p"${mysql_root_password}" 'roundcube' < /var/www/roundcubemail/SQL/mysql.initial.sql
 
-cp /var/www/html/roundcube/config/main.inc.php.dist /var/www/roundcube/config/main.inc.php
+cp /var/www/roundcubemail/config/main.inc.php.dist /var/www/roundcubemail/config/main.inc.php
 
-sed -i "s|^\(\$rcmail_config\['default_host'\] =\).*$|\1 \'localhost\';|" /var/www/roundcube/config/main.inc.php
-sed -i "s|^\(\$rcmail_config\['smtp_server'\] =\).*$|\1 \'localhost\';|" /var/www/roundcube/config/main.inc.php
-sed -i "s|^\(\$rcmail_config\['smtp_user'\] =\).*$|\1 \'%u\';|" /var/www/roundcube/config/main.inc.php
-sed -i "s|^\(\$rcmail_config\['smtp_pass'\] =\).*$|\1 \'%p\';|" /var/www/roundcube/config/main.inc.php
-sed -i "s|^\(\$rcmail_config\['support_url'\] =\).*$|\1 \'https://duckduckgo.com\';|" /var/www/roundcube/config/main.inc.php
-sed -i "s|^\(\$rcmail_config\['quota_zero_as_unlimited'\] =\).*$|\1 true;|" /var/www/roundcube/config/main.inc.php
-sed -i "s|^\(\$rcmail_config\['preview_pane'\] =\).*$|\1 true;|" /var/www/roundcube/config/main.inc.php
-sed -i "s|^\(\$rcmail_config\['read_when_deleted'\] =\).*$|\1 false;|" /var/www/roundcube/config/main.inc.php
-sed -i "s|^\(\$rcmail_config\['check_all_folders'\] =\).*$|\1 true;|" /var/www/roundcube/config/main.inc.php
-sed -i "s|^\(\$rcmail_config\['display_next'\] =\).*$|\1 true;|" /var/www/roundcube/config/main.inc.php
-sed -i "s|^\(\$rcmail_config\['top_posting'\] =\).*$|\1 true;|" /var/www/roundcube/config/main.inc.php
-sed -i "s|^\(\$rcmail_config\['sig_above'\] =\).*$|\1 true;|" /var/www/roundcube/config/main.inc.php
-sed -i "s|^\(\$rcmail_config\['login_lc'\] =\).*$|\1 2;|" /var/www/roundcube/config/main.inc.php
+sed -i "s|^\(\$rcmail_config\['default_host'\] =\).*$|\1 \'localhost\';|" /var/www/roundcubemail/config/main.inc.php
+sed -i "s|^\(\$rcmail_config\['smtp_server'\] =\).*$|\1 \'localhost\';|" /var/www/roundcubemail/config/main.inc.php
+sed -i "s|^\(\$rcmail_config\['smtp_user'\] =\).*$|\1 \'%u\';|" /var/www/roundcubemail/config/main.inc.php
+sed -i "s|^\(\$rcmail_config\['smtp_pass'\] =\).*$|\1 \'%p\';|" /var/www/roundcubemail/config/main.inc.php
+sed -i "s|^\(\$rcmail_config\['support_url'\] =\).*$|\1 \'https://duckduckgo.com\';|" /var/www/roundcubemail/config/main.inc.php
+sed -i "s|^\(\$rcmail_config\['quota_zero_as_unlimited'\] =\).*$|\1 true;|" /var/www/roundcubemail/config/main.inc.php
+sed -i "s|^\(\$rcmail_config\['preview_pane'\] =\).*$|\1 true;|" /var/www/roundcubemail/config/main.inc.php
+sed -i "s|^\(\$rcmail_config\['read_when_deleted'\] =\).*$|\1 false;|" /var/www/roundcubemail/config/main.inc.php
+sed -i "s|^\(\$rcmail_config\['check_all_folders'\] =\).*$|\1 true;|" /var/www/roundcubemail/config/main.inc.php
+sed -i "s|^\(\$rcmail_config\['display_next'\] =\).*$|\1 true;|" /var/www/roundcubemail/config/main.inc.php
+sed -i "s|^\(\$rcmail_config\['top_posting'\] =\).*$|\1 true;|" /var/www/roundcubemail/config/main.inc.php
+sed -i "s|^\(\$rcmail_config\['sig_above'\] =\).*$|\1 true;|" /var/www/roundcubemail/config/main.inc.php
+sed -i "s|^\(\$rcmail_config\['login_lc'\] =\).*$|\1 2;|" /var/www/roundcubemail/config/main.inc.php
 
-cp /var/www/roundcube/config/db.inc.php.dist /var/www/roundcube/config/db.inc.php
+cp /var/www/roundcubemail/config/db.inc.php.dist /var/www/roundcubemail/config/db.inc.php
 
-sed -i "s|^\(\$rcmail_config\['db_dsnw'\] =\).*$|\1 \'mysqli://roundcube:${mysql_roundcube_password}@localhost/roundcube\';|" /var/www/roundcube/config/db.inc.php
+sed -i "s|^\(\$rcmail_config\['db_dsnw'\] =\).*$|\1 \'mysqli://roundcube:${mysql_roundcube_password}@localhost/roundcube\';|" /var/www/roundcubemail/config/db.inc.php
 
-rm -rf /var/www/roundcube/installer
+rm -rf /var/www/roundcubemail/installer
 
 service apache2 restart
