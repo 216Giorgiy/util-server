@@ -11,73 +11,48 @@ chown -R root:root /var/www/roundcubemail
 chown -R www-data:root /var/www/roundcubemail/temp/
 chown -R www-data:root /var/www/roundcubemail/logs/
 
+if [ -z "${mysql_roundcube_password}" ]; then
+  tmp=$(</dev/urandom tr -dc A-Za-z0-9 | head -c12)
+  read -p "MySQL roundcube user password [${tmp}]:" mysql_roundcube_password
+  mysql_roundcube_password=${mysql_roundcube_password:-${tmp}}
+  echo "MySQL roundcube: ${mysql_roundcube_password}" >> .passwords
+fi
 
-# if [ -z "${mysql_roundcube_password}" ]; then
-#   tmp=$(</dev/urandom tr -dc A-Za-z0-9 | head -c12)
-#   read -p "MySQL roundcube user password [${tmp}]:" mysql_roundcube_password
-#   mysql_roundcube_password=${mysql_roundcube_password:-${tmp}}
-#   echo "MySQL roundcube: ${mysql_roundcube_password}" >> .passwords
-# fi
+if [ -z "${mysql_root_password}" ]; then
+  read -p "MySQL root password []:" mysql_root_password
+fi
 
-# if [ -z "${mysql_root_password}" ]; then
-#   read -p "MySQL root password []:" mysql_root_password
-# fi
+sed -e "s|mypassword|${mysql_roundcube_password}|" <<'EOF' | mysql -u root -p"${mysql_root_password}"
+USE mysql;
+CREATE USER 'roundcube'@'localhost' IDENTIFIED BY 'mypassword';
+GRANT USAGE ON * . * TO 'roundcube'@'localhost' IDENTIFIED BY 'mypassword';
+CREATE DATABASE IF NOT EXISTS `roundcube`;
+GRANT ALL PRIVILEGES ON `roundcube` . * TO 'roundcube'@'localhost';
+FLUSH PRIVILEGES;
+EOF
 
-# cat <<'EOF' > /etc/httpd/conf.d/20-roundcube.conf
-# Alias /webmail /var/www/html/roundcube
+mysql -u root -p"${mysql_root_password}" 'roundcube' < /var/www/roundcube/SQL/mysql.initial.sql
 
-# <Directory /var/www/html/roundcube>
-#   Options -Indexes
-#   AllowOverride All
-# </Directory>
+cp /var/www/html/roundcube/config/main.inc.php.dist /var/www/roundcube/config/main.inc.php
 
-# <Directory /var/www/html/roundcube/config>
-#   Order Deny,Allow
-#   Deny from All
-# </Directory>
+sed -i "s|^\(\$rcmail_config\['default_host'\] =\).*$|\1 \'localhost\';|" /var/www/roundcube/config/main.inc.php
+sed -i "s|^\(\$rcmail_config\['smtp_server'\] =\).*$|\1 \'localhost\';|" /var/www/roundcube/config/main.inc.php
+sed -i "s|^\(\$rcmail_config\['smtp_user'\] =\).*$|\1 \'%u\';|" /var/www/roundcube/config/main.inc.php
+sed -i "s|^\(\$rcmail_config\['smtp_pass'\] =\).*$|\1 \'%p\';|" /var/www/roundcube/config/main.inc.php
+sed -i "s|^\(\$rcmail_config\['support_url'\] =\).*$|\1 \'https://duckduckgo.com\';|" /var/www/roundcube/config/main.inc.php
+sed -i "s|^\(\$rcmail_config\['quota_zero_as_unlimited'\] =\).*$|\1 true;|" /var/www/roundcube/config/main.inc.php
+sed -i "s|^\(\$rcmail_config\['preview_pane'\] =\).*$|\1 true;|" /var/www/roundcube/config/main.inc.php
+sed -i "s|^\(\$rcmail_config\['read_when_deleted'\] =\).*$|\1 false;|" /var/www/roundcube/config/main.inc.php
+sed -i "s|^\(\$rcmail_config\['check_all_folders'\] =\).*$|\1 true;|" /var/www/roundcube/config/main.inc.php
+sed -i "s|^\(\$rcmail_config\['display_next'\] =\).*$|\1 true;|" /var/www/roundcube/config/main.inc.php
+sed -i "s|^\(\$rcmail_config\['top_posting'\] =\).*$|\1 true;|" /var/www/roundcube/config/main.inc.php
+sed -i "s|^\(\$rcmail_config\['sig_above'\] =\).*$|\1 true;|" /var/www/roundcube/config/main.inc.php
+sed -i "s|^\(\$rcmail_config\['login_lc'\] =\).*$|\1 2;|" /var/www/roundcube/config/main.inc.php
 
-# <Directory /var/www/html/roundcube/temp>
-#   Order Deny,Allow
-#   Deny from All
-# </Directory>
+cp /var/www/roundcube/config/db.inc.php.dist /var/www/roundcube/config/db.inc.php
 
-# <Directory /var/www/html/roundcube/logs>
-#   Order Deny,Allow
-#   Deny from All
-# </Directory>
-# EOF
+sed -i "s|^\(\$rcmail_config\['db_dsnw'\] =\).*$|\1 \'mysqli://roundcube:${mysql_roundcube_password}@localhost/roundcube\';|" /var/www/roundcube/config/db.inc.php
 
-# sed -e "s|mypassword|${mysql_roundcube_password}|" <<'EOF' | mysql -u root -p"${mysql_root_password}"
-# USE mysql;
-# CREATE USER 'roundcube'@'localhost' IDENTIFIED BY 'mypassword';
-# GRANT USAGE ON * . * TO 'roundcube'@'localhost' IDENTIFIED BY 'mypassword';
-# CREATE DATABASE IF NOT EXISTS `roundcube`;
-# GRANT ALL PRIVILEGES ON `roundcube` . * TO 'roundcube'@'localhost';
-# FLUSH PRIVILEGES;
-# EOF
+rm -rf /var/www/roundcube/installer
 
-# mysql -u root -p"${mysql_root_password}" 'roundcube' < /var/www/html/roundcube/SQL/mysql.initial.sql
-
-# cp /var/www/html/roundcube/config/main.inc.php.dist /var/www/html/roundcube/config/main.inc.php
-
-# sed -i "s|^\(\$rcmail_config\['default_host'\] =\).*$|\1 \'localhost\';|" /var/www/html/roundcube/config/main.inc.php
-# sed -i "s|^\(\$rcmail_config\['smtp_server'\] =\).*$|\1 \'localhost\';|" /var/www/html/roundcube/config/main.inc.php
-# sed -i "s|^\(\$rcmail_config\['smtp_user'\] =\).*$|\1 \'%u\';|" /var/www/html/roundcube/config/main.inc.php
-# sed -i "s|^\(\$rcmail_config\['smtp_pass'\] =\).*$|\1 \'%p\';|" /var/www/html/roundcube/config/main.inc.php
-# #sed -i "s|^\(\$rcmail_config\['support_url'\] =\).*$|\1 \'mailto:${E}\';|" /var/www/html/roundcube/config/main.inc.php
-# sed -i "s|^\(\$rcmail_config\['quota_zero_as_unlimited'\] =\).*$|\1 true;|" /var/www/html/roundcube/config/main.inc.php
-# sed -i "s|^\(\$rcmail_config\['preview_pane'\] =\).*$|\1 true;|" /var/www/html/roundcube/config/main.inc.php
-# sed -i "s|^\(\$rcmail_config\['read_when_deleted'\] =\).*$|\1 false;|" /var/www/html/roundcube/config/main.inc.php
-# sed -i "s|^\(\$rcmail_config\['check_all_folders'\] =\).*$|\1 true;|" /var/www/html/roundcube/config/main.inc.php
-# sed -i "s|^\(\$rcmail_config\['display_next'\] =\).*$|\1 true;|" /var/www/html/roundcube/config/main.inc.php
-# sed -i "s|^\(\$rcmail_config\['top_posting'\] =\).*$|\1 true;|" /var/www/html/roundcube/config/main.inc.php
-# sed -i "s|^\(\$rcmail_config\['sig_above'\] =\).*$|\1 true;|" /var/www/html/roundcube/config/main.inc.php
-# sed -i "s|^\(\$rcmail_config\['login_lc'\] =\).*$|\1 2;|" /var/www/html/roundcube/config/main.inc.php
-
-# cp /var/www/html/roundcube/config/db.inc.php.dist /var/www/html/roundcube/config/db.inc.php
-
-# sed -i "s|^\(\$rcmail_config\['db_dsnw'\] =\).*$|\1 \'mysqli://roundcube:${mysql_roundcube_password}@localhost/roundcube\';|" /var/www/html/roundcube/config/db.inc.php
-
-# rm -rf /var/www/html/roundcube/installer
-
-# service httpd reload
+service apache2 restart
