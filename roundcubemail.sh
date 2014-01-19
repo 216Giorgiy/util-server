@@ -2,7 +2,7 @@
 
 clear
 
-wget http://downloads.sourceforge.net/project/roundcubemail/roundcubemail/0.9.5/roundcubemail-0.9.5.tar.gz?r=http%3A%2F%2Froundcube.net%2Fdownload%2F&ts=1389863438&use_mirror=garr
+wget http://downloads.sourceforge.net/project/roundcubemail/roundcubemail/0.9.5/roundcubemail-0.9.5.tar.gz
 mv roundcubemail-*.tar.gz /var/www/
 tar xfz /var/www/roundcubemail-*.tar.gz
 rm -f /var/www/roundcubemail-*.tar.gz
