@@ -48,6 +48,7 @@ sed -i "s|^\(\$rcmail_config\['password_charset'\] =\).*$|\1 \'utf8';|" /var/www
 sed -i "s|^\(\$rcmail_config\['quota_zero_as_unlimited'\] =\).*$|\1 true;|" /var/www/roundcubemail/config/main.inc.php
 sed -i "s|^\(\$rcmail_config\['preview_pane'\] =\).*$|\1 true;|" /var/www/roundcubemail/config/main.inc.php
 sed -i "s|^\(\$rcmail_config\['read_when_deleted'\] =\).*$|\1 false;|" /var/www/roundcubemail/config/main.inc.php
+sed -i "s|^\(\$rcmail_config\['session_lifetime'\] =\).*$|\1 60*24*3;|" /var/www/roundcubemail/config/main.inc.php
 sed -i "s|^\(\$rcmail_config\['check_all_folders'\] =\).*$|\1 true;|" /var/www/roundcubemail/config/main.inc.php
 sed -i "s|^\(\$rcmail_config\['draft_autosave'\] =\).*$|\1 30;|" /var/www/roundcubemail/config/main.inc.php
 sed -i "s|^\(\$rcmail_config\['use_https'\] =\).*$|\1 true;|" /var/www/roundcubemail/config/main.inc.php
