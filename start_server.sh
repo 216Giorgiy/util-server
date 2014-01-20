@@ -14,6 +14,7 @@ test -z "$CHANGE_PASS" -o "$CHANGE_PASS" = "n" -o "$CHANGE_PASS" = "N" || passwd
 
 #Package required:
 msg 'Install a lot of packages'
+apt-get update && apt-get upgrade
 apt-get -q -y install zsh curl git python python3 nmap \
 	php5 php5-dev php5-mcrypt php5-intl php5-sqlite php5-mysql mysql-server
 
