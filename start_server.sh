@@ -7,9 +7,10 @@ qstn(){
 }
 #TODO: sed stuff + check all test !! (Too tired to work on it more for now)
 
+
 #If needed, change the password:
 qstn "Change password? [y/N]"; read CHANGE_PASS
-test "$CHANGE_PASS" -o "$CHANGE_PASS" = "n" -o "$CHANGE_PASS" = "N" && passwd
+test -z "$CHANGE_PASS" -o "$CHANGE_PASS" = "n" -o "$CHANGE_PASS" = "N" || passwd
 
 #Package required:
 msg 'Install a lot of packages'
@@ -24,8 +25,11 @@ sed -i "s/ZSH_THEME=robbyrussell/ZSH_THEME=candy/" .zshrc
 
 #If wanted, change ssh port:
 qstn "Enter new ssh port -leave blank to keep it- > "; read PORT_SSH
-test "$PORT_SSH" -eq '0' && msg "cannot be equal to 0, keep unchanged"
-test "$PORT_SSH" -gt '0' && msg "switch to #$PORT_SSH " && echo '**TODO with sed**'
+test -z "$PORT_SSH" && msg "port unchanged"
+test -z "$PORT_SSH" || (test $PORT_SSH -eq '0' && msg "cannot be equal to 0, kept unchanged")
+test -z "$PORT_SSH" || (test $PORT_SSH -gt '0' && msg "switch to #$PORT_SSH " && echo '**TODO with sed**')
+
+### above is OK ###
 
 #If wanted, unauthorize root to ssh:
 qstn "Should root shh? [y/N]"; read ROOT_SSH
