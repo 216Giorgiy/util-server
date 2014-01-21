@@ -17,7 +17,7 @@ msg 'Install a lot of packages'
 apt-get update && apt-get upgrade
 apt-get -q -y install zsh curl git python python-pip python-imaging python-jinja2 python-lxml python3 \
 	libxml2-dev libxslt1-dev nmap mysql-server \
-	php5 php5-dev php5-mcrypt php5-intl php5-sqlite php5-mysql php-pear
+	php5 php5-dev php5-curl php5-mcrypt php5-intl php5-sqlite php5-mysql php-pear
 
 #Install oh-my-zsh:
 msg 'Install oh-my-zsh with candy theme -we like candies-'
