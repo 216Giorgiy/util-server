@@ -33,7 +33,7 @@ test -z "$PORT_SSH" || (test $PORT_SSH -gt '0' && msg "switch to #$PORT_SSH" && 
 
 #If wanted, unauthorize root to ssh:
 qstn "Should root shh? -make sure you have a sudoer!- [y/N]"; read ROOT_SSH
-test "$ROOT_SSH" -o "$ROOT_SSH" = "n" -o "$ROOT_SSH" = "N" || (msg "Disable root to ssh " && sed -i 's/PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config)
+test "$ROOT_SSH" -o "$ROOT_SSH" = "n" -o "$ROOT_SSH" = "N" && (msg "Disable root to ssh " && sed -i 's/PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config)
 
 service ssh restart
 
