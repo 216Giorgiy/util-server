@@ -29,13 +29,14 @@ sed -i "s/ZSH_THEME=robbyrussell/ZSH_THEME=candy/" .zshrc
 qstn "Enter new ssh port -leave blank to keep it- > "; read PORT_SSH
 test -z "$PORT_SSH" && msg "port unchanged"
 test -z "$PORT_SSH" || (test $PORT_SSH -eq '0' && msg "cannot be equal to 0, kept unchanged")
-test -z "$PORT_SSH" || (test $PORT_SSH -gt '0' && msg "switch to #$PORT_SSH " && echo '**TODO with sed**')
-
-### above is OK ###
+test -z "$PORT_SSH" || (test $PORT_SSH -gt '0' && msg "switch to #$PORT_SSH" && sed -i 's/Port 22/Port '$PORT_SSH'/g' /etc/ssh/sshd_config)
 
 #If wanted, unauthorize root to ssh:
-qstn "Should root shh? [y/N]"; read ROOT_SSH
-test "$ROOT_SSH" -o "$ROOT_SSH" = "n" -o "$ROOT_SSH" = "N" || echo '**TODO with sed**'
+qstn "Should root shh? -make sure you have a sudoer!- [y/N]"; read ROOT_SSH
+test "$ROOT_SSH" -o "$ROOT_SSH" = "n" -o "$ROOT_SSH" = "N" && (msg "Disable root to ssh " && sed -i 's/PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config)
+
+service ssh restart
+
 
 #If wanted, create new user(s):
 qstn "Create new user(s)? [n/Y]"; read NEW_USER
