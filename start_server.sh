@@ -20,7 +20,7 @@ apt-get -q -y install zsh curl git python python-pip python-imaging python-jinja
 	php5 php5-dev php5-curl php5-mcrypt php5-intl php5-sqlite php5-mysql php-pear
 
 #Install oh-my-zsh:
-msg 'Install oh-my-zsh with candy theme -we like candies-'
+msg 'Install oh-my-zsh with candy theme'
 chsh -s /bin/zsh
 curl -L https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh | sh
 sed -i "s/ZSH_THEME=robbyrussell/ZSH_THEME=candy/" .zshrc
