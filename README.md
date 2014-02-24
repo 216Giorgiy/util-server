@@ -17,5 +17,4 @@ Run it !
 --------
 * apt-get install git 
 * git clone https://github.com/auzias/util-server.git
-* chmod +x utils-server/*
-* ./utils-server/start_server.sh
+* ./util-server/start_server.sh
