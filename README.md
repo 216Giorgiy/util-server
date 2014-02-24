@@ -15,7 +15,7 @@ What does those scripts do ?
 
 Run it !
 --------
-* sudo apt-get install git 
+* apt-get install git 
 * git clone https://github.com/auzias/util-server.git
-* sudo chmod +x utils-server/*
-* sudo ./utils-server/start_server.sh
+* chmod +x utils-server/*
+* ./utils-server/start_server.sh
